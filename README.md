@@ -80,6 +80,39 @@ Typical monthly cost: **$0.60 - $1.50** for daily briefings.
 | `x_user.py me --track` | Profile + save follower delta | ~$0.01 |
 | `x_user.py lookup USER` | Any user's profile | ~$0.01 |
 
+## How It Works
+
+### Architecture
+
+The skill talks directly to the X API v2 using OAuth 1.0a (your API keys). No middlemen, no third-party proxies.
+
+```
+You ask OpenClaw → OpenClaw reads SKILL.md → runs the right script via uv
+                                                      ↓
+                                              Script hits X API v2
+                                                      ↓
+                                         Response stored locally (data/)
+                                                      ↓
+                                           Clean output → agent → you
+```
+
+### Cost Optimization (3 layers)
+
+1. **Persistent local store** — Every tweet/mention gets saved to `data/tweets.json` on first fetch. Subsequent requests serve from local storage. A tweet is never re-fetched unless you explicitly ask (`refresh`).
+
+2. **Incremental `since_id` fetching** — Each fetch stores the newest tweet ID. Next time, the API only returns tweets newer than that. First run pulls your recent history; after that, only new posts cost anything.
+
+3. **Daily budget guard** — Tracks every API call in `data/usage.json`. If your daily spend hits the limit, the skill warns you and stops making calls (override with `--force`).
+
+### Accountability Mode
+
+`x_timeline.py activity` checks your recent posting activity and tells the agent:
+- When you last posted
+- How many posts today / this hour
+- Whether you've been spending too much time on X
+
+The agent can use this to nudge you back to work.
+
 ## File Structure
 
 ```
@@ -103,6 +136,18 @@ x-twitter/
     ├── mentions.json     # Persistent mention store
     └── usage.json        # Daily API cost tracking
 ```
+
+## Prerequisites
+
+- [uv](https://astral.sh/uv) — Python package runner (handles dependencies automatically)
+- X API developer account with credits loaded at [developer.x.com](https://developer.x.com)
+- [OpenClaw](https://openclaw.ai) (or any agent platform that reads SKILL.md)
+
+## Credits
+
+Built by [@aaronnev_](https://x.com/aaronnev_) with [Claude Code](https://claude.ai/code) (Claude Opus 4.6).
+
+Uses [tweepy](https://github.com/tweepy/tweepy) for X API v2 access and [uv](https://github.com/astral-sh/uv) for zero-config Python script execution.
 
 ## License
 
