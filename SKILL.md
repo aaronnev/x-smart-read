@@ -113,21 +113,50 @@ uv run x_timeline.py top --days 7
 uv run x_user.py me --track
 ```
 
-## Cost Notes
+## Agent Guidelines — READ THIS BEFORE CALLING ANY COMMAND
 
-X API v2 pay-per-use pricing:
-- Tweet reads: ~$0.005 per request (up to 100 tweets)
-- User reads: ~$0.01 per request
+**Every command costs real money.** The X API charges per request. Follow these rules to minimize spend:
 
-The skill minimizes costs with:
-- **Persistent local store**: fetched tweets are stored forever, never re-fetched
-- **`since_id` incremental fetching**: only gets new tweets since last check
-- **Daily budget guard**: warns and blocks if daily spend limit is exceeded
-- **Mentions as notifications**: new mentions signal engagement without re-checking every post
+### Rules
 
-Typical costs:
-- Daily briefing: ~$0.02/day ($0.60/mo)
-- With 5 checks/day: ~$0.03/day ($0.90/mo)
-- Budget tiers: lite ($0.03/day), standard ($0.10/day), intense ($0.25/day)
+1. **Never call the same command twice in one conversation** unless the user explicitly asks for fresh data. The scripts cache locally — if you already ran `recent` this session, just reference those results.
+2. **Prefer `top` over `recent` for repeat questions.** `top` reads from the local store for free ($0). `recent` hits the API ($0.005).
+3. **Don't use `--context` on mentions by default.** It costs an extra $0.005 per reply thread it fetches. Only add it if the user specifically asks "what were they replying to?"
+4. **Use `--max 5` for quick checks.** Default is 10-20. If the user just wants a summary, pull fewer.
+5. **Use `--hours 24` for briefings.** Don't pull the full timeline when they just want "what happened today."
+6. **Never run all three scripts unprompted.** If the user asks "what's happening on my X?", start with `recent --hours 24 --max 5`. Only add mentions or profile if they ask or it's a full morning brief.
+7. **For accountability checks, use `activity` only.** It's a single API call. Don't also pull mentions and profile — that triples the cost.
+8. **`top` and `refresh` are your friends.** `top` is free (local data). `refresh TWEET_ID` updates just one tweet ($0.005) — use it when they ask "how's my last post doing?" instead of re-pulling the whole timeline.
+9. **Watch the daily spend total.** Every command output shows "Today's spend: $X.XXX". If it's approaching the budget limit, tell the user before making more calls.
+10. **Never loop or retry on your own.** If a command fails (402, rate limit, etc.), report the error. Don't retry automatically.
 
-Every command prints its API cost and today's running total.
+### Cost Reference
+
+| Action | Cost | When to use |
+|--------|------|-------------|
+| `recent` | $0.005 | Once per briefing, or when user asks for new posts |
+| `top` | **$0** | Anytime — serves from local store |
+| `activity` | $0.005 | Accountability check, once per session max |
+| `refresh ID` | $0.005 | User asks about a specific post's performance |
+| `mentions recent` | $0.005 | Once per briefing, or user asks about replies |
+| `mentions --context` | $0.005-0.03 | Only when user explicitly wants reply context |
+| `user me` | $0.01 | Profile check, once per day is plenty |
+| `user me --track` | $0.01 | Morning brief only — saves follower delta |
+| `user lookup` | $0.01 | Only when user asks about another account |
+
+### Budget Tiers
+
+The user set a daily budget during setup. The scripts will warn and block when the limit is hit:
+- **lite**: $0.03/day (~1 briefing)
+- **standard**: $0.10/day (~3-5 checks)
+- **intense**: $0.25/day (~10+ checks)
+
+If blocked, tell the user: "Daily X API budget reached. Use --force to override, or wait until tomorrow."
+
+### What NOT to do
+
+- Don't run commands "just to have fresh data" — only fetch when the user needs it
+- Don't use `--no-cache` unless debugging
+- Don't call `user lookup` on multiple accounts in a loop
+- Don't refresh every tweet's metrics — only refresh specific ones the user asks about
+- Don't combine `recent` + `mentions` + `user` in one response unless it's explicitly a "full briefing" request
