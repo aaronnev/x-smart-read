@@ -6,22 +6,27 @@ Works with [Claude Code](https://claude.ai/code), [OpenClaw](https://openclaw.ai
 
 ## What It Does
 
-**Read anyone's posts:**
-- Read any tweet by URL — yours or anyone else's (~$0.005)
-- Reconstruct entire threads automatically (~$0.005-0.01)
-- Save and manage bookmarks (free)
+**Read** — pull any tweet, thread, or profile on X (~$0.005 per read)
+- Paste a URL, get the full content — yours or anyone else's
+- Reconstruct entire threads automatically
+- Look up any user's profile and stats
 
-**Track your own account:**
-- Morning briefing — your posts, mentions, profile, follower delta in one command (~$0.02)
-- Full engagement metrics on your recent posts (~$0.005)
-- See who's replying to or quoting you, and how big their audience is (~$0.005)
-- Follower count with delta over time (~$0.01)
+**Analytics** — see how your account is doing (~$0.005-0.01)
+- Full engagement metrics on your posts (impressions, likes, RTs, replies, quotes)
+- Who's replying to or quoting you, and how big their audience is
+- Follower count tracked over time with daily delta
+- Bookmarks — save and manage from the terminal
 
-**Budget controls:**
-- Three modes — guarded (stops at your daily limit), relaxed (warns only), unlimited
-- Every tweet cached locally and never re-fetched
+**Briefings** — automated reports so you don't have to dig (~$0.02)
+- Morning briefing: posts + mentions + profile + follower delta in one command
+- Weekly spend report with daily breakdown
+- Accountability check — flags if you're spending too much time on X
+
+**Budget controls** — the reason this costs $1-2/month instead of $25
+- Three modes: guarded (stops at your daily limit), relaxed (warns only), unlimited
+- Every tweet cached locally forever — fetched once, never re-fetched
 - Dry-run on any command to preview cost before calling the API
-- Daily spend tracking with weekly reports
+- Daily spend tracking so you always know where you're at
 
 ## Getting Started
 
