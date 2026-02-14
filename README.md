@@ -1,6 +1,10 @@
 # X Personal Analytics Skill
 
-Give your AI agent eyes on your X account — analytics, posts, mentions, followers — for **~$1-2/month**. Read-only by design. Official API only, no scraping, no suspension risk.
+A skill that lets AI coding agents (like [Claude Code](https://claude.ai/code) or [OpenClaw](https://openclaw.ai)) monitor your X/Twitter account — read tweets, track engagement, surface mentions, and give you a daily briefing. All for **~$1-2/month**.
+
+Read-only by design. Official API only, no scraping, no suspension risk.
+
+> **For AI agents:** see [AGENTS.md](AGENTS.md) for the machine-readable command reference.
 
 ## What It Does
 
