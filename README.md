@@ -1,44 +1,6 @@
 # X Personal Analytics Skill
 
-Give your AI agent eyes on your X account — analytics, posts, mentions, followers — for **~$1-2/month**.
-
-**Read-only by design.** Your agent monitors and reports — it never posts on your behalf.
-
-Official API only. No scraping, no suspension risk.
-
-## Install
-
-### OpenClaw
-```bash
-cd ~/.openclaw/workspace/skills
-git clone https://github.com/aaronnev/x-twitter-skill.git x-twitter
-```
-
-### Claude Code
-```bash
-mkdir -p .claude/skills
-cd .claude/skills
-git clone https://github.com/aaronnev/x-twitter-skill.git x-twitter
-```
-
-### Any other agent
-Clone it wherever your agent reads skill files from.
-
-## Setup
-
-```bash
-# Install uv if you don't have it
-curl -LsSf https://astral.sh/uv/install.sh | sh
-
-# Run the setup wizard — walks you through X Developer account, API keys, budget
-cd x-twitter
-uv run scripts/x_setup.py
-
-# Test it
-uv run scripts/x_user.py me
-```
-
-Need help? **[SETUP.md](SETUP.md)** has the full walkthrough with screenshots, key formats, and troubleshooting.
+Give your AI agent eyes on your X account — analytics, posts, mentions, followers — for **~$1-2/month**. Read-only by design. Official API only, no scraping, no suspension risk.
 
 ## What It Does
 
@@ -65,6 +27,16 @@ You don't need to memorise commands. Just talk:
 - *"Am I posting too much today?"*
 
 Your agent reads [SKILL.md](SKILL.md) and figures out the right script.
+
+## Install
+
+```bash
+git clone https://github.com/aaronnev/x-twitter-skill.git x-twitter
+cd x-twitter
+uv run scripts/x_setup.py   # walks you through everything
+```
+
+Works with [OpenClaw](https://openclaw.ai), [Claude Code](https://claude.ai/code), or any agent that reads skill files. Need help? See **[SETUP.md](SETUP.md)** for the full walkthrough.
 
 ## Commands
 
