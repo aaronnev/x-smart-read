@@ -1,10 +1,12 @@
 # X Personal Analytics Skill
 
-A skill that lets AI coding agents (like [Claude Code](https://claude.ai/code) or [OpenClaw](https://openclaw.ai)) monitor your X/Twitter account — read tweets, track engagement, surface mentions, and give you a daily briefing. All for **~$1-2/month**.
+Your AI agent can't read Twitter. Links are opaque, threads are a mess, and there's no way to check how your posts are doing without opening the app and doomscrolling.
 
-Read-only by design. Official API only, no scraping, no suspension risk.
+This fixes that. It gives your agent ([Claude Code](https://claude.ai/code), [OpenClaw](https://openclaw.ai), or anything that reads a SKILL.md) full read access to your X account via the official API. No scraping, no browser automation, no suspension risk. Read-only — it never posts on your behalf.
 
-> **For AI agents:** see [AGENTS.md](AGENTS.md) for the machine-readable command reference.
+Costs about **$1-2/month**.
+
+> Agents: see [AGENTS.md](AGENTS.md) for command reference.
 
 ## What It Does
 
@@ -15,8 +17,9 @@ Read-only by design. Official API only, no scraping, no suspension risk.
 - **Mentions** — who's replying to or quoting you, with their follower count
 - **Bookmarks** — save, list, and manage your bookmarked posts
 - **Follower tracking** — daily count with delta over time
-- **Accountability** — checks if you're spending too much time on X when you should be working
-- **Cost optimized** — persistent local store + incremental fetching = ~$1-2/mo
+- **Accountability** — tells you if you're spending too much time on X
+- **Budget controls** — three modes (guarded / relaxed / unlimited), daily spend tracking, dry-run on every command
+- **Cheap** — persistent local store + incremental fetching keeps costs at ~$1-2/mo
 
 ## Getting Started
 
