@@ -1,43 +1,77 @@
 # X Personal Analytics Skill
 
-Give your AI agent eyes on your X account — analytics, posts, mentions, followers — for **~$1-2/month**. Official API only, no scraping, no suspension risk. Built after @nikitabier [confirmed](https://x.com/nikitabier/status/2022502068486074617) automated scraping will get accounts suspended — this skill uses only the official X API v2.
+Give your AI agent eyes on your X account — analytics, posts, mentions, followers — for **~$1-2/month**. Official API only, no scraping, no suspension risk.
+
+**Read-only by design.** Your agent monitors and reports — it never posts on your behalf.
 
 <img src="assets/nikitabier-api-vs-scraping.png" alt="@nikitabier: Use the official API all you want. But any form of scraping or search that is automated will get caught currently." width="500">
 
-Works with any AI agent — [OpenClaw](https://openclaw.ai), Claude Code, Codex, or anything that reads a [SKILL.md](http://skill.md/).
+> Built after @nikitabier [confirmed](https://x.com/nikitabier/status/2022502068486074617) automated scraping will get accounts suspended — this skill uses only the official X API v2.
 
 ## What It Does
 
-- **Timeline**: Your recent posts with full engagement metrics (impressions, likes, RTs, replies, quotes, bookmarks)
-- **Mentions**: Who's replying to or quoting you, with their follower count
-- **Read any tweet**: Fetch any tweet or thread by URL — with reply context and quote tweets
-- **Bookmarks**: Save, list, and manage your bookmarked posts
-- **Morning Briefing**: One command for posts + mentions + profile + follower delta (~$0.02)
-- **Follower Tracking**: Daily follower count with delta tracking over time
-- **Accountability**: Checks if you're spending too much time on X when you should be working
-- **Cost Optimized**: Persistent local store + incremental fetching = minimal API costs (~$1-2/mo)
+- **Read any tweet** — paste a URL, get the full content. No browser, no login, no screenshots
+- **Thread reconstruction** — fetch entire conversations automatically
+- **Morning Briefing** — one command: posts + mentions + profile + follower delta (~$0.02)
+- **Timeline analytics** — your recent posts with full engagement metrics (impressions, likes, RTs, replies, quotes, bookmarks)
+- **Mentions** — who's replying to or quoting you, with their follower count
+- **Bookmarks** — save, list, and manage your bookmarked posts
+- **Follower tracking** — daily count with delta over time
+- **Accountability** — checks if you're spending too much time on X when you should be working
+- **Cost optimized** — persistent local store + incremental fetching = ~$1-2/mo
 
-### Why Not Scraping / Bird CLI?
+### Just ask your agent
 
-X is actively detecting and suspending accounts that use automated scraping, cookie-based tools, or browser automation. The official API is the only safe path for programmatic access. This skill uses OAuth 1.0a with your own API keys — no cookies, no headless browsers, no risk.
+You don't need to memorise commands. Just talk:
+
+- *"What did my last 5 tweets do?"*
+- *"Who mentioned me today?"*
+- *"Read this thread: https://x.com/..."*
+- *"Give me my morning X briefing"*
+- *"How much have I spent on the API this week?"*
+- *"Am I posting too much today?"*
+
+Your agent reads [SKILL.md](SKILL.md) and figures out the right script.
+
+### Why not scraping?
+
+X is actively detecting and suspending accounts that use automated scraping, cookie-based tools, or browser automation. This skill uses OAuth 1.0a with your own API keys — no cookies, no headless browsers, no risk.
+
+## Install
+
+### OpenClaw
+```bash
+cd ~/.openclaw/workspace/skills
+git clone https://github.com/aaronnev/x-twitter-skill.git x-twitter
+```
+
+### Claude Code
+```bash
+mkdir -p .claude/skills
+cd .claude/skills
+git clone https://github.com/aaronnev/x-twitter-skill.git x-twitter
+```
+
+### Any other agent
+Clone it wherever your agent reads skill files from.
 
 ## Setup
 
-See **[SETUP.md](SETUP.md)** for a detailed step-by-step guide including X Developer Console walkthrough, API credit loading, and budget configuration.
-
-Quick version:
+The setup wizard walks you through everything — X Developer account, API keys, budget config:
 
 ```bash
-# 1. Clone the skill
-cd ~/.openclaw/workspace/skills  # or wherever you keep skills
-git clone https://github.com/aaronnev/x-twitter-skill.git x-twitter
+# Install uv if you don't have it
+curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# 2. Run setup (requires uv: curl -LsSf https://astral.sh/uv/install.sh | sh)
+# Run the wizard
+cd x-twitter
 uv run scripts/x_setup.py
 
-# 3. Test it
+# Test it
 uv run scripts/x_user.py me
 ```
+
+Need more detail? See **[SETUP.md](SETUP.md)** for the full walkthrough with key formats and troubleshooting.
 
 ## Cost
 
@@ -166,12 +200,6 @@ x-twitter/
     ├── bookmarks.json    # Persistent bookmark store
     └── usage.json        # Daily API cost tracking
 ```
-
-## Prerequisites
-
-- [uv](https://astral.sh/uv) — Python package runner (handles dependencies automatically)
-- X API developer account with credits loaded at [developer.x.com](https://developer.x.com)
-- Any AI agent that reads [SKILL.md](http://skill.md/) ([OpenClaw](https://openclaw.ai), Claude Code, Codex, etc.)
 
 ## Roadmap
 
