@@ -12,12 +12,21 @@ Give your AI agent eyes on your X account — analytics, posts, mentions, follow
 - **Bookmarks** — save, list, and manage your bookmarked posts
 - **Follower tracking** — daily count with delta over time
 - **Accountability** — checks if you're spending too much time on X when you should be working
-- **Budget controls** — 3 modes (guarded / relaxed / unlimited), daily spend tracking, dry-run on every command
 - **Cost optimized** — persistent local store + incremental fetching = ~$1-2/mo
 
-### Just ask your agent
+## Getting Started
 
-You don't need to memorise commands. Just talk:
+```bash
+git clone https://github.com/aaronnev/x-twitter-skill.git x-twitter
+```
+
+Then follow the **[Setup Guide →](SETUP.md)** — walks you through creating an X Developer account, getting your API keys, and configuring your budget. Takes about 10 minutes.
+
+## Usage
+
+### Ask your agent
+
+You don't need to memorise commands. Just talk to your AI agent naturally:
 
 - *"What did my last 5 tweets do?"*
 - *"Who mentioned me today?"*
@@ -26,19 +35,21 @@ You don't need to memorise commands. Just talk:
 - *"How much have I spent on the API this week?"*
 - *"Am I posting too much today?"*
 
-Your agent reads [SKILL.md](SKILL.md) and figures out the right script.
+Your agent reads [SKILL.md](SKILL.md) and picks the right script automatically.
 
-## Install
+### Budget controls
 
-```bash
-git clone https://github.com/aaronnev/x-twitter-skill.git x-twitter
-```
+Three modes to control how much you spend:
 
-Works with [OpenClaw](https://openclaw.ai), [Claude Code](https://claude.ai/code), or any agent that reads skill files.
+- **Guarded** (default) — warns you and stops when you hit your daily limit
+- **Relaxed** — warns you but keeps going
+- **Unlimited** — no limits, no warnings
 
-**[→ Setup guide](SETUP.md)** — step-by-step walkthrough for X Developer account, API keys, and budget configuration.
+Every command also supports `--dry-run` to preview what it would cost before making any API calls.
 
 ## Commands
+
+For terminal use or if you want to run scripts directly:
 
 | Command | What It Does | Cost |
 |---------|-------------|------|
@@ -55,8 +66,8 @@ Works with [OpenClaw](https://openclaw.ai), [Claude Code](https://claude.ai/code
 | `x_user.py lookup USER` | Any user's profile | ~$0.01 |
 | `x_setup.py --spend-report` | Weekly spend summary | $0 |
 | `x_setup.py --budget-mode MODE` | Set budget mode | $0 |
-| Any command `--dry-run` | Preview cost without API call | $0 |
-| Any command `--no-budget` | Skip budget checks | $0 |
+
+All commands support `--dry-run` (preview cost) and `--no-budget` (skip budget checks).
 
 ## Cost
 
@@ -69,11 +80,6 @@ X API v2 is pay-per-use. This skill keeps costs low:
 | Heavy monitoring | $0.10 | $3.00 |
 
 Cost scales with **check frequency**, not followers. 100 followers or 100K — same price.
-
-Three budget modes to control spend:
-- **Guarded** (default) — warns and blocks at daily limit
-- **Relaxed** — warns but keeps going
-- **Unlimited** — no limits
 
 ## How It Works
 
@@ -113,27 +119,6 @@ Reading long threads. A 500-tweet thread = ~5 paginated calls ($0.025).
 
 **Can I see exactly what I've spent?**
 `uv run scripts/x_setup.py --spend-report` — daily breakdown with monthly projection.
-
-## File Structure
-
-```
-x-twitter/
-├── SKILL.md              # Agent skill manifest
-├── AGENTS.md             # Machine-readable command reference
-├── SETUP.md              # Detailed setup walkthrough
-├── CONTRIBUTING.md       # How to contribute
-├── scripts/
-│   ├── x_common.py       # Shared utilities
-│   ├── x_setup.py        # Setup wizard + spend reports
-│   ├── x_briefing.py     # Combined morning briefing
-│   ├── x_read.py         # Read any tweet or thread
-│   ├── x_timeline.py     # Posts + engagement + accountability
-│   ├── x_mentions.py     # Mentions and replies
-│   ├── x_user.py         # Profile + follower tracking
-│   └── x_bookmarks.py    # Bookmark management
-└── references/
-    └── x-api-quickref.md # API endpoint reference
-```
 
 ## Roadmap
 
