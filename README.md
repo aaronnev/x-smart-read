@@ -6,19 +6,19 @@ Works with [Claude Code](https://claude.ai/code), [OpenClaw](https://openclaw.ai
 
 ## What It Does
 
-**Read and understand X content:**
-- Read any tweet by URL — full content, no browser, no login
-- Reconstruct entire threads automatically
-- Save and manage bookmarks
+**Read anyone's posts:**
+- Read any tweet by URL — yours or anyone else's (~$0.005)
+- Reconstruct entire threads automatically (~$0.005-0.01)
+- Save and manage bookmarks (free)
 
-**Monitor your account:**
-- Morning briefing — posts, mentions, profile, follower delta in one command (~$0.02)
-- Timeline analytics with full engagement metrics
-- See who's replying to or quoting you, and how big their audience is
-- Track follower count over time
+**Track your own account:**
+- Morning briefing — your posts, mentions, profile, follower delta in one command (~$0.02)
+- Full engagement metrics on your recent posts (~$0.005)
+- See who's replying to or quoting you, and how big their audience is (~$0.005)
+- Follower count with delta over time (~$0.01)
 
-**Keep costs under control:**
-- Three budget modes — guarded (stops at limit), relaxed (warns only), unlimited
+**Budget controls:**
+- Three modes — guarded (stops at your daily limit), relaxed (warns only), unlimited
 - Every tweet cached locally and never re-fetched
 - Dry-run on any command to preview cost before calling the API
 - Daily spend tracking with weekly reports
