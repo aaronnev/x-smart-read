@@ -94,13 +94,13 @@ The X API v2 is pay-per-use. You need credits loaded to make any API calls.
 ```bash
 # Clone into your skills directory
 cd ~/.openclaw/workspace/skills  # or wherever you keep skills
-git clone https://github.com/aaronnev/x-twitter-skill.git x-twitter
+git clone https://github.com/aaronnev/x-smart-read.git x-smart-read
 ```
 
 ## Step 6: Run Setup
 
 ```bash
-cd x-twitter
+cd x-smart-read
 uv run scripts/x_setup.py
 ```
 
