@@ -94,72 +94,92 @@ def cmd_briefing(args):
     # === 1. YOUR POSTS ===
     posts = []
     try:
-        resp = client.get_users_tweets(
-            id=user_id,
-            max_results=100,
-            tweet_fields=TWEET_FIELDS,
-            exclude=["retweets"],
-            start_time=start_time,
-            user_auth=True,
-        )
-        api_calls_tweet += 1
-        if resp.data:
-            for tweet in resp.data:
-                tid = str(tweet.id)
-                data = {
-                    "id": tid,
-                    "text": tweet.text,
-                    "created_at": tweet.created_at.isoformat() if tweet.created_at else None,
-                    "metrics": dict(tweet.public_metrics) if tweet.public_metrics else {},
-                    "stored_at": datetime.now(timezone.utc).isoformat(),
-                }
-                tweet_store[tid] = data
-                posts.append(data)
-            save_tweet_store(tweet_store)
+        pagination_token = None
+        while True:
+            kwargs = dict(
+                id=user_id,
+                max_results=100,
+                tweet_fields=TWEET_FIELDS,
+                exclude=["retweets"],
+                start_time=start_time,
+                user_auth=True,
+            )
+            if pagination_token:
+                kwargs["pagination_token"] = pagination_token
+            resp = client.get_users_tweets(**kwargs)
+            api_calls_tweet += 1
+            if resp.data:
+                for tweet in resp.data:
+                    tid = str(tweet.id)
+                    data = {
+                        "id": tid,
+                        "text": tweet.text,
+                        "created_at": tweet.created_at.isoformat() if tweet.created_at else None,
+                        "metrics": dict(tweet.public_metrics) if tweet.public_metrics else {},
+                        "stored_at": datetime.now(timezone.utc).isoformat(),
+                    }
+                    tweet_store[tid] = data
+                    posts.append(data)
+                save_tweet_store(tweet_store)
+            # Paginate if more results exist
+            if resp.meta and resp.meta.get("next_token"):
+                pagination_token = resp.meta["next_token"]
+            else:
+                break
     except tweepy.errors.TweepyException as e:
         handle_api_error(e)
 
     # === 2. MENTIONS ===
     mentions = []
+    authors = {}
     try:
-        resp = client.get_users_mentions(
-            id=user_id,
-            max_results=100,
-            tweet_fields=TWEET_FIELDS,
-            expansions=["author_id"],
-            user_fields=USER_FIELDS,
-            start_time=start_time,
-            user_auth=True,
-        )
-        api_calls_tweet += 1
+        pagination_token = None
+        while True:
+            kwargs = dict(
+                id=user_id,
+                max_results=100,
+                tweet_fields=TWEET_FIELDS,
+                expansions=["author_id"],
+                user_fields=USER_FIELDS,
+                start_time=start_time,
+                user_auth=True,
+            )
+            if pagination_token:
+                kwargs["pagination_token"] = pagination_token
+            resp = client.get_users_mentions(**kwargs)
+            api_calls_tweet += 1
 
-        authors = {}
-        if resp.includes and "users" in resp.includes:
-            for user in resp.includes["users"]:
-                authors[str(user.id)] = {
+            if resp.includes and "users" in resp.includes:
+                for user in resp.includes["users"]:
+                    authors[str(user.id)] = {
                     "username": user.username,
                     "name": user.name,
                     "followers": user.public_metrics["followers_count"] if user.public_metrics else 0,
                 }
 
-        if resp.data:
-            for tweet in resp.data:
-                tid = str(tweet.id)
-                author = authors.get(str(tweet.author_id), {})
-                data = {
-                    "id": tid,
-                    "text": tweet.text,
-                    "created_at": tweet.created_at.isoformat() if tweet.created_at else None,
-                    "author_id": str(tweet.author_id),
-                    "author_username": author.get("username", "unknown"),
-                    "author_name": author.get("name", ""),
-                    "author_followers": author.get("followers", 0),
-                    "metrics": dict(tweet.public_metrics) if tweet.public_metrics else {},
-                    "stored_at": datetime.now(timezone.utc).isoformat(),
-                }
-                mention_store[tid] = data
-                mentions.append(data)
-            save_mention_store(mention_store)
+            if resp.data:
+                for tweet in resp.data:
+                    tid = str(tweet.id)
+                    author = authors.get(str(tweet.author_id), {})
+                    data = {
+                        "id": tid,
+                        "text": tweet.text,
+                        "created_at": tweet.created_at.isoformat() if tweet.created_at else None,
+                        "author_id": str(tweet.author_id),
+                        "author_username": author.get("username", "unknown"),
+                        "author_name": author.get("name", ""),
+                        "author_followers": author.get("followers", 0),
+                        "metrics": dict(tweet.public_metrics) if tweet.public_metrics else {},
+                        "stored_at": datetime.now(timezone.utc).isoformat(),
+                    }
+                    mention_store[tid] = data
+                    mentions.append(data)
+                save_mention_store(mention_store)
+            # Paginate if more results exist
+            if resp.meta and resp.meta.get("next_token"):
+                pagination_token = resp.meta["next_token"]
+            else:
+                break
     except tweepy.errors.TweepyException as e:
         handle_api_error(e)
 
