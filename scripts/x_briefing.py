@@ -84,6 +84,8 @@ def cmd_briefing(args):
     client = get_client(config)
     user_id = config["user_id"]
     handle = config["handle"]
+    budget_mode = config.get("budget_mode", "guarded")
+    auto_paginate = budget_mode in ("relaxed", "unlimited") or args.no_budget
     start_time = datetime.now(timezone.utc) - timedelta(hours=hours)
     api_calls_tweet = 0
     api_calls_user = 0
@@ -123,7 +125,11 @@ def cmd_briefing(args):
                 save_tweet_store(tweet_store)
             # Paginate if more results exist
             if resp.meta and resp.meta.get("next_token"):
-                pagination_token = resp.meta["next_token"]
+                if auto_paginate:
+                    pagination_token = resp.meta["next_token"]
+                else:
+                    print(f"  ⚠️  More than {len(posts)} posts in the last {hours}h — use relaxed/unlimited mode or --no-budget to fetch all")
+                    break
             else:
                 break
     except tweepy.errors.TweepyException as e:
@@ -177,7 +183,11 @@ def cmd_briefing(args):
                 save_mention_store(mention_store)
             # Paginate if more results exist
             if resp.meta and resp.meta.get("next_token"):
-                pagination_token = resp.meta["next_token"]
+                if auto_paginate:
+                    pagination_token = resp.meta["next_token"]
+                else:
+                    print(f"  ⚠️  More than {len(mentions)} mentions in the last {hours}h — use relaxed/unlimited mode or --no-budget to fetch all")
+                    break
             else:
                 break
     except tweepy.errors.TweepyException as e:
